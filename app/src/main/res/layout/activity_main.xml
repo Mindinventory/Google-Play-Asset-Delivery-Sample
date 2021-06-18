@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    tools:context=".ui.MainActivity">
+
+    <Button
+        android:id="@+id/btn_ff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Fast-Follow" />
+
+    <Button
+        android:id="@+id/btn_od"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="On-Demand" />
+
+    <Button
+        android:id="@+id/btn_watch_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:text="Watch Video" />
+
+    <Button
+        android:id="@+id/btn_play_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:text="Play Audio" />
+
+</LinearLayout>
