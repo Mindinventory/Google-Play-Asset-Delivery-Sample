@@ -9,4 +9,4 @@ https://www.medium.com/
 https://github.com/Mindinventory/Google-Play-Asset-Delivery-Sample
 
 <h1>Let us know!</h1>
-We’d be really happy if you send us links to your projects where you use our component. Just send an email to mailto:sales@mindinventory.com And do let us know if you have any questions or suggestion regarding our work.
+We’d be really happy if you send us links to your projects where you use our component. Just send an email to [sales@mindinventory.com](mailto:sales@mindinventory.com) And do let us know if you have any questions or suggestion regarding our work.
