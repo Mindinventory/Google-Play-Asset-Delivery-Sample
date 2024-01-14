@@ -1,5 +1,5 @@
 rootProject.name = "PlayAssetDeliveryDemo"
 include ':app'
-include ':install_time_asset_pack'
-include ':fast_follow_asset_pack'
+//include ':install_time_asset_pack'
+//include ':fast_follow_asset_pack'
 include ':on_demand_asset_pack'
