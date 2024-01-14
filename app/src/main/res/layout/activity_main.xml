@@ -12,15 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:visibility="gone"
-        android:text="[NOT WORKING] Install-Time" />
+        android:text="Install-Time" />
 
     <Button
         android:id="@+id/btn_ff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:visibility="gone"
         android:text="Fast-Follow" />
 
     <Button

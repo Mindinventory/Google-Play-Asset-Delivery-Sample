@@ -26,8 +26,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-//    assetPacks = [":install_time_asset_pack",":fast_follow_asset_pack",":on_demand_asset_pack"]
-    assetPacks = [":on_demand_asset_pack"]
+    assetPacks = [":install_time_asset_pack",":fast_follow_asset_pack",":on_demand_asset_pack"]
     namespace 'com.activesince93.playassetdeliverydemo'
 }
 

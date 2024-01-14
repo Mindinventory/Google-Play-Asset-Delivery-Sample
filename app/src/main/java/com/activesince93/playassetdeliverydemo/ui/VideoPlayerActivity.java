@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 
 import com.activesince93.playassetdeliverydemo.R;
-import androidx.media3.common.MediaItem;
-import androidx.media3.ui.PlayerView;
-import androidx.media3.exoplayer.ExoPlayer;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 

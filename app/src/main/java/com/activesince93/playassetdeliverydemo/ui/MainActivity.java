@@ -41,8 +41,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private long totalSizeToDownloadInBytes = 0;
     private CustomProgressDialog dialog = null;
     private AssetPackManager assetPackManager;
-//    private final String installTimeAssetPack = "install_time_asset_pack";
-//    private final String fastFollowAssetPack = "fast_follow_asset_pack";
+    private final String fastFollowAssetPack = "fast_follow_asset_pack";
     private final String onDemandAssetPack = "on_demand_asset_pack";
     private boolean waitForWifiConfirmationShown = false;
     private final String TAG = "MainActivity";
@@ -161,12 +160,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playInstallTimeVideo() {
-        String[] list = null;
         try {
             inputStream = assetManager.open(videoFileName);
-            Log.i(TAG, "activesince931 assets length: " + inputStream);
+            File file = getFileFromAssets(this, videoFileName, inputStream);
+            if (file.exists()) {
+                playVideoInExoplayer(file);
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.e(TAG, "File doesn't exists!");
+        }
+    }
+
+    private File getFileFromAssets(Context context, String fileName, InputStream is) {
+        try {
+            File file = new File(context.getCacheDir(), fileName);
+            if (!file.exists()) {
+                OutputStream cache = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    cache.write(buffer, 0, bytesRead);
+                }
+            }
+            return file;
+        } catch (IOException e) {
+            return null;
         }
     }
 
@@ -336,9 +354,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//    private void checkDownloadSize() {
-//        getPackStates(fastFollowAssetPack);
-//    }
+    private void checkDownloadSize() {
+        getPackStates(fastFollowAssetPack);
+    }
 
     /**
      * This method will be triggered when the pack download size is more than 150MB
@@ -374,13 +392,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void registerListener() {
         dialog.showProgresDialog();
         String onDemandAssetPackPath = getAbsoluteAssetPath(onDemandAssetPack, "");
-//        String fastFollowAssetPackPath = getAbsoluteAssetPath(fastFollowAssetPack, "");
+        String fastFollowAssetPackPath = getAbsoluteAssetPath(fastFollowAssetPack, "");
 
-//        if (onDemandAssetPackPath == null || fastFollowAssetPackPath == null) {
-        if (onDemandAssetPackPath == null) {
+        if (onDemandAssetPackPath == null || fastFollowAssetPackPath == null) {
             assetPackManager.registerListener(assetPackStateUpdateListener);
             List<String> assetPackList = new ArrayList<>();
-//            assetPackList.add(fastFollowAssetPack);
+            assetPackList.add(fastFollowAssetPack);
             assetPackList.add(onDemandAssetPack);
             assetPackManager.fetch(assetPackList);
         } else {
@@ -392,19 +409,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * start fast-follow delivery mode
      */
     private void initFastFollow() {
-//        String assetsPath = getAbsoluteAssetPath(fastFollowAssetPack, "");
-//        if (assetsPath == null) {
-//            getPackStates(fastFollowAssetPack);
-//        }
-//        Log.i(TAG, "activesince931 Asset Path: " + assetsPath);
-//        if (assetsPath != null) {
-//            File file = new File(assetsPath + File.separator + videoFileName);
-//            Log.i(TAG, "activesince931 File: " + file.getPath());
-//            Log.i(TAG, "activesince931 File exists: " + file.exists());
-//            if (file.exists()) {
-//                playVideoInExoplayer(file);
-//            }
-//        }
+        String assetsPath = getAbsoluteAssetPath(fastFollowAssetPack, "");
+        if (assetsPath == null) {
+            getPackStates(fastFollowAssetPack);
+        }
+        Log.i(TAG, "activesince931 Asset Path: " + assetsPath);
+        if (assetsPath != null) {
+            File file = new File(assetsPath + File.separator + videoFileName);
+            Log.i(TAG, "activesince931 File: " + file.getPath());
+            Log.i(TAG, "activesince931 File exists: " + file.exists());
+            if (file.exists()) {
+                playVideoInExoplayer(file);
+            }
+        }
     }
 
     /**
