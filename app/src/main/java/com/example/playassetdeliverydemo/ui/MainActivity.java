@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AssetManager assetManager;
     private InputStream inputStream = null;
-    private final String videoFileName = "BigBuckBunny_640x360.m4v";
+    private final String videoFileName = "sample_video.m4v";
+    private final String audioFileName = "audio.mp3";
     private final int REQUEST_WRITE_PERMISSION = 111;
     private MediaPlayer mPlayer;
     private boolean isPaused = false;
@@ -63,10 +66,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AssetPackState assetPackState;
     private boolean isFastFollow = false;
     private boolean isOnDemand = false;
+    private Button btn_it;
     private Button btn_ff;
     private Button btn_od;
     private Button btn_watch_video;
     private Button btnPlayAudio;
+    private TextView txt_download_status;
     private Context context;
 
     @Override
@@ -82,11 +87,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initViews() {
         context = MainActivity.this;
+        btn_it = findViewById(R.id.btn_it);
         btn_ff = findViewById(R.id.btn_ff);
         btn_od = findViewById(R.id.btn_od);
+        txt_download_status = findViewById(R.id.txt_download_status);
         btn_watch_video = findViewById(R.id.btn_watch_video);
         btnPlayAudio = findViewById(R.id.btn_play_audio);
 
+        btn_it.setOnClickListener(this);
         btn_ff.setOnClickListener(this);
         btn_od.setOnClickListener(this);
         btn_watch_video.setOnClickListener(this);
@@ -100,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_it: {
+                playInstallTimeVideo();
+                break;
+            }
+
             case R.id.btn_ff: {
                 dialog.showProgresDialog();
 
@@ -143,6 +156,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             assetManager = context.getAssets();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void playInstallTimeVideo() {
+        try {
+            inputStream = assetManager.open(videoFileName);
+            File file = getFileFromAssets(this, videoFileName, inputStream);
+            if (file.exists()) {
+                playVideoInExoplayer(file);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "File doesn't exists!");
+        }
+    }
+
+    private File getFileFromAssets(Context context, String fileName, InputStream is) {
+        try {
+            File file = new File(context.getCacheDir(), fileName);
+            if (!file.exists()) {
+                OutputStream cache = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    cache.write(buffer, 0, bytesRead);
+                }
+            }
+            return file;
+        } catch (IOException e) {
+            return null;
         }
     }
 
@@ -238,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * This method will show Alert Dialog to play audio file
      */
     private void showAlertDialog() {
-        String audioFileName = "aud_avatar_narration.m4a";
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.layout_audio_player, null);
@@ -313,9 +354,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//    private void checkDownloadSize() {
-//        getPackStates(fastFollowAssetPack);
-//    }
+    private void checkDownloadSize() {
+        getPackStates(fastFollowAssetPack);
+    }
 
     /**
      * This method will be triggered when the pack download size is more than 150MB
@@ -372,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (assetsPath == null) {
             getPackStates(fastFollowAssetPack);
         }
+
         if (assetsPath != null) {
             File file = new File(assetsPath + File.separator + videoFileName);
             if (file.exists()) {
@@ -418,13 +460,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (state.status()) {
                 case AssetPackStatus.PENDING:
                     Log.i(TAG, "Pending");
+                    txt_download_status.setText("PENDING");
                     break;
 
                 case AssetPackStatus.DOWNLOADING:
                     long downloaded = state.bytesDownloaded();
                     long totalSize = state.totalBytesToDownload();
                     double percent = 100.0 * downloaded / totalSize;
-
+                    txt_download_status.setText("DOWNLOADING: " + percent);
                     Log.i(TAG, "PercentDone=" + String.format("%.2f", percent));
                     break;
 
@@ -435,6 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case AssetPackStatus.COMPLETED:
                     // Asset pack is ready to use. Start the Game/App.
+                    txt_download_status.setText("COMPLETED");
                     initClickedAssetPack();
                     break;
 

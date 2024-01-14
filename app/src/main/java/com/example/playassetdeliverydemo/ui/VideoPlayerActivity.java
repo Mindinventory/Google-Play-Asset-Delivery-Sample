@@ -2,21 +2,21 @@ package com.example.playassetdeliverydemo.ui;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 
 import com.example.playassetdeliverydemo.R;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.util.Util;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 
     private PlayerView playerView;
-    private SimpleExoPlayer player;
+    private ExoPlayer player;
     private boolean playWhenReady = true;
     private int currentWindow = 0;
     private long playbackPosition = 0;
@@ -43,7 +43,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             initializePlayer();
         }
     }
@@ -55,7 +55,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         hideSystemUi();
-        if ((Util.SDK_INT < 24 || player == null)) {
+        if ((Build.VERSION.SDK_INT < 24 || player == null)) {
             initializePlayer();
         }
     }
@@ -66,7 +66,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT < 24) {
+        if (Build.VERSION.SDK_INT < 24) {
             releasePlayer();
         }
     }
@@ -77,7 +77,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             releasePlayer();
         }
     }
@@ -87,7 +87,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      */
     private void initializePlayer() {
         if (player == null) {
-            player = new SimpleExoPlayer.Builder(this).build();
+            player = new ExoPlayer.Builder(this).build();
             playerView.setPlayer(player);
             MediaItem mediaItem = MediaItem.fromUri(uri);
             player.setMediaItem(mediaItem);
@@ -101,7 +101,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         if (player != null) {
             playWhenReady = player.getPlayWhenReady();
             playbackPosition = player.getCurrentPosition();
-            currentWindow = player.getCurrentWindowIndex();
+            currentWindow = player.getCurrentMediaItemIndex();
             player.release();
             player = null;
         }

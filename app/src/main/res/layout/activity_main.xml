@@ -8,6 +8,13 @@
     tools:context=".ui.MainActivity">
 
     <Button
+        android:id="@+id/btn_it"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Install-Time" />
+
+    <Button
         android:id="@+id/btn_ff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,5 +43,11 @@
         android:visibility="gone"
         android:textAllCaps="false"
         android:text="Play Audio" />
+
+    <TextView
+        android:id="@+id/txt_download_status"
+        android:layout_width="wrap_content"
+        android:text="ASSET STATUS"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
