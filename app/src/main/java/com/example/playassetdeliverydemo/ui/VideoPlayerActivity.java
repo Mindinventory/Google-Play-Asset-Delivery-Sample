@@ -1,4 +1,4 @@
-package com.activesince93.playassetdeliverydemo.ui;
+package com.example.playassetdeliverydemo.ui;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
@@ -11,7 +11,7 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
-import com.activesince93.playassetdeliverydemo.R;
+import com.example.playassetdeliverydemo.R;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 

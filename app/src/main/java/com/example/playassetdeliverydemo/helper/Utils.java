@@ -1,4 +1,4 @@
-package com.activesince93.playassetdeliverydemo.helper;
+package com.example.playassetdeliverydemo.helper;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

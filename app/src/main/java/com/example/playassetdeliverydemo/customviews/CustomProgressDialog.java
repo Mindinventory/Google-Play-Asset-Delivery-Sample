@@ -1,4 +1,4 @@
-package com.activesince93.playassetdeliverydemo.customviews;
+package com.example.playassetdeliverydemo.customviews;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.view.Window;
 
 import androidx.annotation.NonNull;
 
-import com.activesince93.playassetdeliverydemo.R;
+import com.example.playassetdeliverydemo.R;
 
 public class CustomProgressDialog extends Dialog {
 

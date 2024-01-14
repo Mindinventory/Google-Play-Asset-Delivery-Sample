@@ -1,4 +1,4 @@
-package com.activesince93.playassetdeliverydemo.ui;
+package com.example.playassetdeliverydemo.ui;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,9 +21,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.activesince93.playassetdeliverydemo.R;
-import com.activesince93.playassetdeliverydemo.customviews.CustomProgressDialog;
-import com.activesince93.playassetdeliverydemo.helper.Utils;
+import com.example.playassetdeliverydemo.R;
+import com.example.playassetdeliverydemo.customviews.CustomProgressDialog;
+import com.example.playassetdeliverydemo.helper.Utils;
 import com.google.android.play.core.assetpacks.AssetPackLocation;
 import com.google.android.play.core.assetpacks.AssetPackManager;
 import com.google.android.play.core.assetpacks.AssetPackManagerFactory;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initInstallTime() {
         try {
-            Context context = createPackageContext("com.activesince93.playassetdeliverydemo", 0);
+            Context context = createPackageContext("com.example.playassetdeliverydemo", 0);
             assetManager = context.getAssets();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -413,11 +413,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (assetsPath == null) {
             getPackStates(fastFollowAssetPack);
         }
-        Log.i(TAG, "activesince931 Asset Path: " + assetsPath);
+
         if (assetsPath != null) {
             File file = new File(assetsPath + File.separator + videoFileName);
-            Log.i(TAG, "activesince931 File: " + file.getPath());
-            Log.i(TAG, "activesince931 File exists: " + file.exists());
             if (file.exists()) {
                 playVideoInExoplayer(file);
             }
@@ -432,11 +430,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (assetsPath == null) {
             getPackStates(onDemandAssetPack);
         }
-        Log.i(TAG, "activesince931 Asset Path: " + assetsPath);
         if (assetsPath != null) {
             File file = new File(assetsPath + File.separator + videoFileName);
-            Log.i(TAG, "activesince931 File: " + file.getPath());
-            Log.i(TAG, "activesince931 File exists: " + file.exists());
             if (file.exists()) {
                 playVideoInExoplayer(file);
             }
