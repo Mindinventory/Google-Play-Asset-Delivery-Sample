@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="10dp"
-    tools:context=".ui.MainActivity">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <Button
-        android:id="@+id/btn_ff"
+        android:id="@+id/btnFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/txt_fast_follow"
         android:textAllCaps="false"
-        android:text="Fast-Follow" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_od"
+        android:id="@+id/btnOD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/txt_on_demand"
         android:textAllCaps="false"
-        android:text="On-Demand" />
+        app:layout_constraintStart_toStartOf="@+id/btnFF"
+        app:layout_constraintTop_toBottomOf="@+id/btnFF" />
 
     <Button
-        android:id="@+id/btn_watch_video"
+        android:id="@+id/btnWatchVideo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/txt_watch_video"
+        android:textAllCaps="false"
         android:visibility="gone"
-        android:textAllCaps="false"
-        android:text="Watch Video" />
+        app:layout_constraintStart_toStartOf="@+id/btnFF"
+        app:layout_constraintTop_toBottomOf="@+id/btnOD" />
 
     <Button
-        android:id="@+id/btn_play_audio"
+        android:id="@+id/btnPlayAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:text="@string/txt_play_audio"
         android:textAllCaps="false"
-        android:text="Play Audio" />
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/btnFF"
+        app:layout_constraintTop_toBottomOf="@+id/btnWatchVideo" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
