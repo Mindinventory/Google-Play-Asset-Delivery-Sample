@@ -3,6 +3,7 @@
 
     <string name="txt_fast_follow">Fast-Follow</string>
     <string name="txt_on_demand">On-Demand</string>
+    <string name="txt_install_time">Install-Time</string>
     <string name="txt_watch_video">Watch Video</string>
     <string name="txt_play_audio">Play Audio</string>
 </resources>

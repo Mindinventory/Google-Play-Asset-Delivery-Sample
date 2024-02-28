@@ -14,8 +14,6 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
 import com.app.playassetdeliverydemo.R
 import com.app.playassetdeliverydemo.customviews.CustomProgressDialog
 import com.app.playassetdeliverydemo.databinding.ActivityMainBinding
@@ -33,13 +31,16 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
+
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private var assetManager: AssetManager? = null
     private var inputStream: InputStream? = null
     private val videoFileName = "big_buck_bunny.mp4"
-    private val audioFileName = "dummy_aud.mp3"
+    private val audioFileName = "sample_audio.wav"
+    private val installTimeVideoFileName = "sample_video.mp4"
     private val requestWritePermission = 111
     private var mPlayer: MediaPlayer? = null
     private var isPaused = false
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         context = this@MainActivity
         btnFF.setOnClickListener(this@MainActivity)
         btnOD.setOnClickListener(this@MainActivity)
+        btnInstallTime.setOnClickListener(this@MainActivity)
         btnWatchVideo.setOnClickListener(this@MainActivity)
         btnPlayAudio.setOnClickListener(this@MainActivity)
         if (dialog == null) {
@@ -89,6 +91,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 isFastFollow = false
                 isOnDemand = true
                 initAssetPackManager()
+            }
+
+            R.id.btnInstallTime -> {
+                playInstallTimeVideo()
             }
 
             R.id.btnWatchVideo -> {
@@ -113,6 +119,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             assetManager = context.assets
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+        }
+    }
+
+    /**
+     * start install-time delivery mode
+     */
+    private fun playInstallTimeVideo() {
+        try {
+            inputStream = assetManager!!.open(installTimeVideoFileName)
+            Log.i(logTAG, "activesince931 assets length: $inputStream")
+            val file = getFileFromAssets(this, inputStream!!)
+            if (file!!.exists()) {
+                playVideoInExoplayer(file)
+            }
+        } catch (e: IOException) {
+            Log.e(logTAG, "File doesn't exists!")
+            throw RuntimeException(e)
+        }
+    }
+
+    private fun getFileFromAssets(context: Context, `is`: InputStream): File? {
+        return try {
+            val file = File(context.cacheDir, videoFileName)
+            if (!file.exists()) {
+                val cache: OutputStream = FileOutputStream(file)
+                val buffer = ByteArray(1024)
+                var bytesRead: Int
+                while (`is`.read(buffer).also { bytesRead = it } != -1) {
+                    cache.write(buffer, 0, bytesRead)
+                }
+            }
+            file
+        } catch (e: IOException) {
+            null
         }
     }
 
@@ -283,9 +323,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             showToast(context, "Please Connect to Internet")
         }
     }
-    //    private void checkDownloadSize() {
-    //        getPackStates(fastFollowAssetPack);
-    //    }
+
     /**
      * This method will be triggered when the pack download size is more than 150MB
      * & user is not available on wifi or switched from wifi to Mobile Data.
@@ -294,17 +332,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun showWifiConfirmationDialog() {
         dialog?.hideProgressDialog()
-        if (!waitForWifiConfirmationShown) {/*assetPackManager!!.showCellularDataConfirmation(this@MainActivity)
-                .addOnSuccessListener { resultCode ->
-                    if (resultCode == RESULT_OK) {
-                        Log.d(logTAG, "Confirmation dialog has been accepted.")
-                        registerListener()
-                    } else if (resultCode == RESULT_CANCELED) {
-                        Log.d(logTAG, "Confirmation dialog has been denied by the user.")
-                        showToast(context, "Please Connect to Wifi to begin app files to download")
-                    }
-                }*/
-
+        if (!waitForWifiConfirmationShown) {
             assetPackManager?.showConfirmationDialog(this@MainActivity)
                 ?.addOnSuccessListener { resultCode ->
                     if (resultCode == RESULT_OK) {
@@ -326,16 +354,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun registerListener() {
         if (dialog != null && dialog!!.isShowing) dialog?.showProgressDialog()
-        val onDemandAssetPackPath = getAbsoluteAssetPath(onDemandAssetPack)
-        val fastFollowAssetPackPath = getAbsoluteAssetPath(fastFollowAssetPack)
-        if (onDemandAssetPackPath == null || fastFollowAssetPackPath == null) {
-            assetPackManager?.registerListener(assetPackStateUpdateListener)
-            val assetPackList: MutableList<String> = ArrayList()
-            assetPackList.add(fastFollowAssetPack)
-            assetPackList.add(onDemandAssetPack)
-            assetPackManager?.fetch(assetPackList)
+        if (isOnDemand) {
+            val onDemandAssetPackPath = getAbsoluteAssetPath(onDemandAssetPack)
+            if (onDemandAssetPackPath == null) {
+                assetPackManager?.registerListener(assetPackStateUpdateListener)
+                val assetPackList: MutableList<String> = ArrayList()
+                assetPackList.add(onDemandAssetPack)
+                assetPackManager?.fetch(assetPackList)
+            } else {
+                initClickedAssetPack()
+            }
         } else {
-            initClickedAssetPack()
+            val fastFollowAssetPackPath = getAbsoluteAssetPath(fastFollowAssetPack)
+            if (fastFollowAssetPackPath == null) {
+                assetPackManager?.registerListener(assetPackStateUpdateListener)
+                val assetPackList: MutableList<String> = ArrayList()
+                assetPackList.add(fastFollowAssetPack)
+                assetPackManager?.fetch(assetPackList)
+            } else {
+                initClickedAssetPack()
+            }
         }
     }
 

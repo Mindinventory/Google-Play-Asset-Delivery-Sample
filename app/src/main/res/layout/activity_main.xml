@@ -24,6 +24,15 @@
         app:layout_constraintTop_toBottomOf="@+id/btnFF" />
 
     <Button
+        android:id="@+id/btnInstallTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_install_time"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="@+id/btnFF"
+        app:layout_constraintTop_toBottomOf="@+id/btnOD" />
+
+    <Button
         android:id="@+id/btnWatchVideo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +40,7 @@
         android:textAllCaps="false"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/btnFF"
-        app:layout_constraintTop_toBottomOf="@+id/btnOD" />
+        app:layout_constraintTop_toBottomOf="@+id/btnInstallTime" />
 
     <Button
         android:id="@+id/btnPlayAudio"
